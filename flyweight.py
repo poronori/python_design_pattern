@@ -1,12 +1,14 @@
 # インスタンスを共有することでリソースを無駄なく使う
 
 def main():
-    neko = PetFactory("ねこ")
-    neko.getPet().call()
-    neko2 = PetFactory("ねこ") # インスタンスは作成されない
-    neko2.getPet().call()
-    inu = PetFactory("いぬ")
-    inu.getPet().call()
+    pet = PetFactory()
+    neko = pet.getPet("ねこ")
+    neko.call()
+    neko2 = pet.getPet("ねこ") # インスタンスは作成されない
+    neko2.call()
+    inu = pet.getPet("いぬ")
+    inu.call()
+    neko.call()
 
 # singletonクラス
 class Singleton(object):
@@ -17,16 +19,14 @@ class Singleton(object):
 
 # Factoryクラス
 # Petクラスを管理する
-# 同じ引数であれば新たにインスタンスを生成しない
+# 同じ引数であれば、新たにインスタンスを生成しない
 class PetFactory(Singleton):
     petList = {}
-    def __init__(self, name):
+    def getPet(self, name):
         self.pet = self.petList.get(name)
         if self.pet == None:
             self.pet = Pet(name)
             self.petList[name] = self.pet
-    
-    def getPet(self):
         return self.pet
 
 # ペットクラス
